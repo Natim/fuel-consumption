@@ -20,9 +20,9 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { initial_quantity = Nothing
-      , fuel_flow = Nothing
-      , flight_time = Nothing
+    ( { initial_quantity = Just 130
+      , fuel_flow = Just 40
+      , flight_time = Just 45
       }
     , Cmd.none
     )
@@ -59,7 +59,7 @@ view model =
     Html.div []
         [ Html.div []
             [ Html.label []
-                [ Html.text "Consomation horaire "
+                [ Html.span [] [ Html.text "Consommation horaire " ]
                 , Html.input
                     [ type_ "number"
                     , value <| String.fromInt <| Maybe.withDefault 0 model.fuel_flow
@@ -70,7 +70,7 @@ view model =
             ]
         , Html.div []
             [ Html.label []
-                [ Html.text "Temps de vol (minutes) "
+                [ Html.span [] [ Html.text "Temps de vol (minutes) " ]
                 , Html.input
                     [ type_ "number"
                     , value <| String.fromInt <| Maybe.withDefault 0 model.flight_time
@@ -81,7 +81,7 @@ view model =
             ]
         , Html.div []
             [ Html.label []
-                [ Html.text "Carburant de départ (Carnet de route) "
+                [ Html.span [] [ Html.text "Carburant de départ" ]
                 , Html.input
                     [ type_ "number"
                     , value <| String.fromInt <| Maybe.withDefault 0 model.initial_quantity
@@ -90,15 +90,6 @@ view model =
                     []
                 ]
             ]
-        , case remaining_fuel of
-            Nothing ->
-                Html.text ""
-
-            Just remainingFuel ->
-                Html.h3 []
-                    [ Html.text <| String.fromInt <| round remainingFuel
-                    , Html.text " litres restants"
-                    ]
         , case used_fuel of
             Nothing ->
                 Html.text ""
@@ -107,5 +98,14 @@ view model =
                 Html.h3 []
                     [ Html.text <| String.fromInt <| round usedFuel
                     , Html.text " litres consommés"
+                    ]
+        , case remaining_fuel of
+            Nothing ->
+                Html.text ""
+
+            Just remainingFuel ->
+                Html.h3 []
+                    [ Html.text <| String.fromInt <| round remainingFuel
+                    , Html.text " litres restants"
                     ]
         ]
