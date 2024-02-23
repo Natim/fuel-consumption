@@ -1,11 +1,14 @@
 module FuelConsumption exposing (main)
 
 import Browser
-import Data.Model exposing (Model)
+import Data.Model as Model exposing (Model)
 import Data.Msg exposing (Msg(..))
+import Data.Planes exposing (planes)
 import Html exposing (Html)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
+import Views.Form as Form
+import Views.FuelInfo as FuelInfo
 
 
 main : Program () Model Msg
@@ -20,12 +23,18 @@ main =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { initial_quantity = Just 130
-      , fuel_flow = Just 40
-      , flight_time = Just 45
-      }
-    , Cmd.none
-    )
+    case planes of
+        f :: fx ->
+            ( { initial_quantity = Just 130
+              , fuel_flow = Just f.fuel_flow
+              , flight_time = Just 45
+              , selected_plane = Just f
+              }
+            , Cmd.none
+            )
+
+        [] ->
+            ( Model.empty, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -43,69 +52,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    let
-        used_fuel =
-            Maybe.map2
-                (\flight_time fuel_flow -> toFloat flight_time / 60 * toFloat fuel_flow)
-                model.flight_time
-                model.fuel_flow
-
-        remaining_fuel =
-            Maybe.map2
-                (\initial_quantity usedFuel -> toFloat initial_quantity - usedFuel)
-                model.initial_quantity
-                used_fuel
-    in
     Html.div []
-        [ Html.div []
-            [ Html.label []
-                [ Html.span [] [ Html.text "Consommation horaire " ]
-                , Html.input
-                    [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.fuel_flow
-                    , onInput UpdateFuelFlow
-                    ]
-                    []
-                ]
-            ]
-        , Html.div []
-            [ Html.label []
-                [ Html.span [] [ Html.text "Temps de vol (minutes) " ]
-                , Html.input
-                    [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.flight_time
-                    , onInput UpdateFlightTime
-                    ]
-                    []
-                ]
-            ]
-        , Html.div []
-            [ Html.label []
-                [ Html.span [] [ Html.text "Carburant de départ" ]
-                , Html.input
-                    [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.initial_quantity
-                    , onInput UpdateInitialQuantity
-                    ]
-                    []
-                ]
-            ]
-        , case used_fuel of
-            Nothing ->
-                Html.text ""
-
-            Just usedFuel ->
-                Html.h3 []
-                    [ Html.text <| String.fromInt <| ceiling usedFuel
-                    , Html.text " litres consommés"
-                    ]
-        , case remaining_fuel of
-            Nothing ->
-                Html.text ""
-
-            Just remainingFuel ->
-                Html.h3 []
-                    [ Html.text <| String.fromInt <| floor remainingFuel
-                    , Html.text " litres restants"
-                    ]
+        [ Form.view model
+        , FuelInfo.view model
         ]
