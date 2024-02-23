@@ -5,3 +5,4 @@ type Msg
     = UpdateFlightTime String
     | UpdateInitialQuantity String
     | UpdateFuelFlow String
+    | UpdatePlaneSelection String
