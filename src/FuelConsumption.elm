@@ -96,7 +96,7 @@ view model =
 
             Just usedFuel ->
                 Html.h3 []
-                    [ Html.text <| String.fromInt <| round usedFuel
+                    [ Html.text <| String.fromInt <| ceiling usedFuel
                     , Html.text " litres consommés"
                     ]
         , case remaining_fuel of
@@ -105,7 +105,7 @@ view model =
 
             Just remainingFuel ->
                 Html.h3 []
-                    [ Html.text <| String.fromInt <| round remainingFuel
+                    [ Html.text <| String.fromInt <| floor remainingFuel
                     , Html.text " litres restants"
                     ]
         ]
