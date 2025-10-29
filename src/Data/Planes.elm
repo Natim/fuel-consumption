@@ -14,6 +14,5 @@ planes : List Plane
 planes =
     [ Plane "PA28" "F-GEQX" "RAC" 33 189
     , Plane "PA28" "F-GHYZ" "RAC" 40 189
-    , Plane "ELIXIR" "F-HTSA" "FGA" 13 120
-    , Plane "WT9" "F-GOOS" "FGA" 17 120
+    , Plane "WT9" "F-GOOS" "FGA" 18 126
     ]
