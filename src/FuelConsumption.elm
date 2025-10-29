@@ -6,7 +6,6 @@ import Data.Msg exposing (Msg(..))
 import Data.Planes exposing (planes)
 import Html exposing (Html)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
 import Views.Form as Form
 import Views.FuelInfo as FuelInfo
 import Views.PlaneSelector as PlaneSelector
@@ -25,7 +24,7 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     case planes of
-        f :: fx ->
+        f :: _ ->
             ( { initial_quantity = Just f.max_quantity
               , fuel_flow = Just f.fuel_flow
               , flight_time = Just 45

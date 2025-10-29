@@ -8,9 +8,22 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
 
-option : Plane -> Html Msg
-option plane =
-    Html.option [ value plane.immat ] [ Html.text <| plane.immat ++ " (" ++ plane.type_ ++ ")" ]
+option : Maybe Plane -> Plane -> Html Msg
+option selected_plane plane =
+    Html.option
+        [ value plane.immat
+        , case selected_plane of
+            Just p ->
+                if p == plane then
+                    selected True
+
+                else
+                    selected False
+
+            Nothing ->
+                selected False
+        ]
+        [ Html.text <| plane.immat ++ " (" ++ plane.type_ ++ ")" ]
 
 
 view : Model -> Html Msg
@@ -18,7 +31,7 @@ view model =
     Html.div []
         [ Html.label []
             [ Html.span [] [ Html.text "Avion " ]
-            , List.map option planes
+            , List.map (option model.selected_plane) planes
                 |> Html.select [ onInput UpdatePlaneSelection ]
             ]
         ]

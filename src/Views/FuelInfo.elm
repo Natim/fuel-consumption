@@ -4,7 +4,6 @@ import Data.Model exposing (Model)
 import Data.Msg exposing (Msg(..))
 import Html exposing (Html)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
 
 
 view : Model -> Html Msg
@@ -38,7 +37,7 @@ view model =
 
             Just remainingFuel ->
                 Html.h3 []
-                    [ Html.span [] [Html.text <| String.fromInt <| floor remainingFuel]
+                    [ Html.span [] [ Html.text <| String.fromInt <| floor remainingFuel ]
                     , Html.text " litres restants"
                     ]
         ]
