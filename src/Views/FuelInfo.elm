@@ -28,7 +28,7 @@ view model =
                 Html.text ""
 
             Just usedFuel ->
-                Html.h3 []
+                Html.h4 []
                     [ Html.text <| String.fromInt <| ceiling usedFuel
                     , Html.text " litres consommés"
                     ]
@@ -38,7 +38,7 @@ view model =
 
             Just remainingFuel ->
                 Html.h3 []
-                    [ Html.text <| String.fromInt <| floor remainingFuel
+                    [ Html.span [] [Html.text <| String.fromInt <| floor remainingFuel]
                     , Html.text " litres restants"
                     ]
         ]
