@@ -12,7 +12,7 @@ type alias Plane =
 
 planes : List Plane
 planes =
-    [ Plane "PA28" "F-GEQX" "RAC" 33 189
+    [ Plane "DR400-Rotax" "F-GORZ" "RAC" 15 110
     , Plane "PA28" "F-GHYZ" "RAC" 40 189
-    , Plane "WT9" "F-GOOS" "FGA" 18 126
+    , Plane "WT9" "F-GOOS" "FGA" 17 126
     ]
