@@ -8,38 +8,77 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         # Fetch the latest commit, only
         fetch-depth: 1
 
     - name: Install a recent version of Python3
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8'
+        python-version: '3.12'
 
     - name: Install requirements
       run:  pip install pre-commit
 
-    - name: Check code
+    - name: Check formatting
       run:  pre-commit run --all-files --show-diff-on-failure
 
-  test:
+  analyse:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         # Fetch the latest commit, only
         fetch-depth: 1
 
     - name: Install Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '16'
+        node-version: '20'
+
+    # Keyed on elm.json so the downloaded packages are reused until a
+    # dependency changes. There is no package-lock.json to key npm on.
+    - name: Cache Elm packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.elm
+        key: elm-${{ hashFiles('elm.json') }}
+
+    - name: Install requirements
+      run:  npm install
+
+    - name: Analyse code
+      run:  npm run analyse
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Fetch the latest commit, only
+        fetch-depth: 1
+
+    - name: Install Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Cache Elm packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.elm
+        key: elm-${{ hashFiles('elm.json') }}
 
     - name: Install requirements
       run:  npm install
 
     - name: Run tests
       run:  npm test
+
+    # --optimize rejects code the plain build accepts, Debug calls in
+    # particular, so the deployed build is worth compiling here.
+    - name: Verify the production build
+      run:  npm run build
