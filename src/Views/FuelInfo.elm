@@ -9,35 +9,35 @@ import Html.Attributes exposing (..)
 view : Model -> Html Msg
 view model =
     let
-        used_fuel =
+        usedFuel =
             Maybe.map2
-                (\flight_time fuel_flow -> toFloat flight_time / 60 * toFloat fuel_flow)
-                model.flight_time
-                model.fuel_flow
+                (\flightTime fuelFlow -> toFloat flightTime / 60 * toFloat fuelFlow)
+                model.flightTime
+                model.fuelFlow
 
-        remaining_fuel =
+        remainingFuel =
             Maybe.map2
-                (\initial_quantity usedFuel -> toFloat initial_quantity - usedFuel)
-                model.initial_quantity
-                used_fuel
+                (\initialFuel used -> toFloat initialFuel - used)
+                model.initialFuel
+                usedFuel
     in
     Html.div []
-        [ case used_fuel of
+        [ case usedFuel of
             Nothing ->
                 Html.text ""
 
-            Just usedFuel ->
+            Just used ->
                 Html.h4 []
-                    [ Html.text <| String.fromInt <| ceiling usedFuel
+                    [ Html.text <| String.fromInt <| ceiling used
                     , Html.text " litres consommés"
                     ]
-        , case remaining_fuel of
+        , case remainingFuel of
             Nothing ->
                 Html.text ""
 
-            Just remainingFuel ->
+            Just remaining ->
                 Html.h3 []
-                    [ Html.span [] [ Html.text <| String.fromInt <| floor remainingFuel ]
+                    [ Html.span [] [ Html.text <| String.fromInt <| floor remaining ]
                     , Html.text " litres restants"
                     ]
         ]

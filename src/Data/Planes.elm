@@ -3,10 +3,10 @@ module Data.Planes exposing (Plane, planes)
 
 type alias Plane =
     { type_ : String
-    , immat : String
+    , registration : String
     , owner : String
-    , fuel_flow : Int
-    , max_quantity : Int
+    , fuelFlow : Int
+    , tankCapacity : Int
     }
 
 

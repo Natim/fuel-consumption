@@ -15,7 +15,7 @@ view model =
                 [ Html.span [] [ Html.text "Consommation horaire " ]
                 , Html.input
                     [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.fuel_flow
+                    , value <| String.fromInt <| Maybe.withDefault 0 model.fuelFlow
                     , onInput UpdateFuelFlow
                     ]
                     []
@@ -26,7 +26,7 @@ view model =
                 [ Html.span [] [ Html.text "Temps de vol (minutes) " ]
                 , Html.input
                     [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.flight_time
+                    , value <| String.fromInt <| Maybe.withDefault 0 model.flightTime
                     , onInput UpdateFlightTime
                     ]
                     []
@@ -37,8 +37,8 @@ view model =
                 [ Html.span [] [ Html.text "Carburant de départ" ]
                 , Html.input
                     [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.initial_quantity
-                    , onInput UpdateInitialQuantity
+                    , value <| String.fromInt <| Maybe.withDefault 0 model.initialFuel
+                    , onInput UpdateInitialFuel
                     ]
                     []
                 ]

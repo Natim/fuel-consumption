@@ -3,6 +3,6 @@ module Data.Msg exposing (Msg(..))
 
 type Msg
     = UpdateFlightTime String
-    | UpdateInitialQuantity String
+    | UpdateInitialFuel String
     | UpdateFuelFlow String
-    | UpdatePlaneSelection String
+    | SelectPlane String

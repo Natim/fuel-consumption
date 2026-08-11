@@ -24,11 +24,11 @@ main =
 init : () -> ( Model, Cmd Msg )
 init _ =
     case planes of
-        f :: _ ->
-            ( { initial_quantity = Just f.max_quantity
-              , fuel_flow = Just f.fuel_flow
-              , flight_time = Just 45
-              , selected_plane = Just f
+        firstPlane :: _ ->
+            ( { initialFuel = Just firstPlane.tankCapacity
+              , fuelFlow = Just firstPlane.fuelFlow
+              , flightTime = Just 45
+              , selectedPlane = Just firstPlane
               }
             , Cmd.none
             )
@@ -41,35 +41,35 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         UpdateFlightTime value ->
-            ( { model | flight_time = String.toInt value }, Cmd.none )
+            ( { model | flightTime = String.toInt value }, Cmd.none )
 
-        UpdateInitialQuantity value ->
-            ( { model | initial_quantity = String.toInt value }, Cmd.none )
+        UpdateInitialFuel value ->
+            ( { model | initialFuel = String.toInt value }, Cmd.none )
 
         UpdateFuelFlow value ->
-            ( { model | fuel_flow = String.toInt value }, Cmd.none )
+            ( { model | fuelFlow = String.toInt value }, Cmd.none )
 
-        UpdatePlaneSelection immat ->
+        SelectPlane registration ->
             let
                 plane =
                     planes
-                        |> List.filter (\p -> p.immat == immat)
+                        |> List.filter (\p -> p.registration == registration)
                         |> List.head
             in
             case plane of
                 Just p ->
                     ( { model
-                        | fuel_flow = Just p.fuel_flow
-                        , initial_quantity = Basics.min (model.initial_quantity |> Maybe.withDefault p.max_quantity) p.max_quantity |> Just
-                        , selected_plane = Just p
+                        | fuelFlow = Just p.fuelFlow
+                        , initialFuel = Basics.min (model.initialFuel |> Maybe.withDefault p.tankCapacity) p.tankCapacity |> Just
+                        , selectedPlane = Just p
                       }
                     , Cmd.none
                     )
 
                 Nothing ->
                     ( { model
-                        | fuel_flow = Nothing
-                        , selected_plane = Nothing
+                        | fuelFlow = Nothing
+                        , selectedPlane = Nothing
                       }
                     , Cmd.none
                     )

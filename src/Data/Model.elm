@@ -4,17 +4,17 @@ import Data.Planes exposing (Plane)
 
 
 type alias Model =
-    { initial_quantity : Maybe Int
-    , fuel_flow : Maybe Int
-    , flight_time : Maybe Int
-    , selected_plane : Maybe Plane
+    { initialFuel : Maybe Int
+    , fuelFlow : Maybe Int
+    , flightTime : Maybe Int
+    , selectedPlane : Maybe Plane
     }
 
 
 empty : Model
 empty =
-    { initial_quantity = Nothing
-    , fuel_flow = Nothing
-    , flight_time = Nothing
-    , selected_plane = Nothing
+    { initialFuel = Nothing
+    , fuelFlow = Nothing
+    , flightTime = Nothing
+    , selectedPlane = Nothing
     }
