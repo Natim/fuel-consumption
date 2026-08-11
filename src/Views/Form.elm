@@ -1,46 +1,36 @@
 module Views.Form exposing (view)
 
-import Data.Model exposing (Model)
-import Data.Msg exposing (Msg(..))
 import Html exposing (Html)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (type_, value)
 import Html.Events exposing (onInput)
+import Msg exposing (Msg(..))
 
 
-view : Model -> Html Msg
-view model =
+numberField : String -> Maybe Int -> (String -> Msg) -> Html Msg
+numberField label current toMsg =
     Html.div []
-        [ Html.div []
-            [ Html.label []
-                [ Html.span [] [ Html.text "Consommation horaire " ]
-                , Html.input
-                    [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.fuelFlow
-                    , onInput UpdateFuelFlow
-                    ]
-                    []
+        [ Html.label []
+            [ Html.span [] [ Html.text label ]
+            , Html.input
+                [ type_ "number"
+                , value (String.fromInt (Maybe.withDefault 0 current))
+                , onInput toMsg
                 ]
+                []
             ]
-        , Html.div []
-            [ Html.label []
-                [ Html.span [] [ Html.text "Temps de vol (minutes) " ]
-                , Html.input
-                    [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.flightTime
-                    , onInput UpdateFlightTime
-                    ]
-                    []
-                ]
-            ]
-        , Html.div []
-            [ Html.label []
-                [ Html.span [] [ Html.text "Carburant de départ" ]
-                , Html.input
-                    [ type_ "number"
-                    , value <| String.fromInt <| Maybe.withDefault 0 model.initialFuel
-                    , onInput UpdateInitialFuel
-                    ]
-                    []
-                ]
-            ]
+        ]
+
+
+view :
+    { a
+        | fuelFlow : Maybe Int
+        , flightTime : Maybe Int
+        , initialFuel : Maybe Int
+    }
+    -> Html Msg
+view { fuelFlow, flightTime, initialFuel } =
+    Html.div []
+        [ numberField "Consommation horaire " fuelFlow UpdateFuelFlow
+        , numberField "Temps de vol (minutes) " flightTime UpdateFlightTime
+        , numberField "Carburant de départ" initialFuel UpdateInitialFuel
         ]

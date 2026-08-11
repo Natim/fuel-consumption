@@ -1,24 +1,28 @@
 module Views.FuelInfo exposing (view)
 
-import Data.Model exposing (Model)
-import Data.Msg exposing (Msg(..))
 import Html exposing (Html)
-import Html.Attributes exposing (..)
+import Msg exposing (Msg)
 
 
-view : Model -> Html Msg
-view model =
+view :
+    { a
+        | fuelFlow : Maybe Int
+        , flightTime : Maybe Int
+        , initialFuel : Maybe Int
+    }
+    -> Html Msg
+view { fuelFlow, flightTime, initialFuel } =
     let
         usedFuel =
             Maybe.map2
-                (\flightTime fuelFlow -> toFloat flightTime / 60 * toFloat fuelFlow)
-                model.flightTime
-                model.fuelFlow
+                (\time flow -> toFloat time / 60 * toFloat flow)
+                flightTime
+                fuelFlow
 
         remainingFuel =
             Maybe.map2
-                (\initialFuel used -> toFloat initialFuel - used)
-                model.initialFuel
+                (\fuel used -> toFloat fuel - used)
+                initialFuel
                 usedFuel
     in
     Html.div []
@@ -28,7 +32,7 @@ view model =
 
             Just used ->
                 Html.h4 []
-                    [ Html.text <| String.fromInt <| ceiling used
+                    [ Html.text (String.fromInt (ceiling used))
                     , Html.text " litres consommés"
                     ]
         , case remainingFuel of
@@ -37,7 +41,7 @@ view model =
 
             Just remaining ->
                 Html.h3 []
-                    [ Html.span [] [ Html.text <| String.fromInt <| floor remaining ]
+                    [ Html.span [] [ Html.text (String.fromInt (floor remaining)) ]
                     , Html.text " litres restants"
                     ]
         ]

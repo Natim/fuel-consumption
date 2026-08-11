@@ -1,37 +1,28 @@
 module Views.PlaneSelector exposing (view)
 
-import Data.Model exposing (Model)
-import Data.Msg exposing (Msg(..))
-import Data.Planes exposing (Plane, planes)
 import Html exposing (Html)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (selected, value)
 import Html.Events exposing (onInput)
+import Msg exposing (Msg(..))
+import Plane exposing (Plane)
 
 
-option : Maybe Plane -> Plane -> Html Msg
+option : Plane -> Plane -> Html Msg
 option selectedPlane plane =
     Html.option
         [ value plane.registration
-        , case selectedPlane of
-            Just p ->
-                if p == plane then
-                    selected True
-
-                else
-                    selected False
-
-            Nothing ->
-                selected False
+        , selected (plane.registration == selectedPlane.registration)
         ]
-        [ Html.text <| plane.registration ++ " (" ++ plane.type_ ++ ")" ]
+        [ Html.text (plane.registration ++ " (" ++ plane.type_ ++ ")") ]
 
 
-view : Model -> Html Msg
-view model =
+view : { a | selectedPlane : Plane } -> Html Msg
+view { selectedPlane } =
     Html.div []
         [ Html.label []
             [ Html.span [] [ Html.text "Avion " ]
-            , List.map (option model.selectedPlane) planes
+            , Plane.all
+                |> List.map (option selectedPlane)
                 |> Html.select [ onInput SelectPlane ]
             ]
         ]

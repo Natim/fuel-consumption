@@ -1,11 +1,9 @@
 module FuelConsumption exposing (main)
 
 import Browser
-import Data.Model as Model exposing (Model)
-import Data.Msg exposing (Msg(..))
-import Data.Planes exposing (planes)
 import Html exposing (Html)
-import Html.Attributes exposing (..)
+import Msg exposing (Msg(..))
+import Plane exposing (Plane)
 import Views.Form as Form
 import Views.FuelInfo as FuelInfo
 import Views.PlaneSelector as PlaneSelector
@@ -21,20 +19,28 @@ main =
         }
 
 
+type alias Model =
+    { initialFuel : Maybe Int
+    , fuelFlow : Maybe Int
+    , flightTime : Maybe Int
+    , selectedPlane : Plane
+    }
+
+
+defaultFlightTime : Int
+defaultFlightTime =
+    45
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
-    case planes of
-        firstPlane :: _ ->
-            ( { initialFuel = Just firstPlane.tankCapacity
-              , fuelFlow = Just firstPlane.fuelFlow
-              , flightTime = Just 45
-              , selectedPlane = Just firstPlane
-              }
-            , Cmd.none
-            )
-
-        [] ->
-            ( Model.empty, Cmd.none )
+    ( { initialFuel = Just Plane.default.tankCapacity
+      , fuelFlow = Just Plane.default.fuelFlow
+      , flightTime = Just defaultFlightTime
+      , selectedPlane = Plane.default
+      }
+    , Cmd.none
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -50,29 +56,22 @@ update msg model =
             ( { model | fuelFlow = String.toInt value }, Cmd.none )
 
         SelectPlane registration ->
-            let
-                plane =
-                    planes
-                        |> List.filter (\p -> p.registration == registration)
-                        |> List.head
-            in
-            case plane of
-                Just p ->
+            case Plane.fromRegistration registration of
+                Just plane ->
                     ( { model
-                        | fuelFlow = Just p.fuelFlow
-                        , initialFuel = Basics.min (model.initialFuel |> Maybe.withDefault p.tankCapacity) p.tankCapacity |> Just
-                        , selectedPlane = Just p
+                        | fuelFlow = Just plane.fuelFlow
+                        , initialFuel =
+                            model.initialFuel
+                                |> Maybe.withDefault plane.tankCapacity
+                                |> min plane.tankCapacity
+                                |> Just
+                        , selectedPlane = plane
                       }
                     , Cmd.none
                     )
 
                 Nothing ->
-                    ( { model
-                        | fuelFlow = Nothing
-                        , selectedPlane = Nothing
-                      }
-                    , Cmd.none
-                    )
+                    ( model, Cmd.none )
 
 
 view : Model -> Html Msg
