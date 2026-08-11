@@ -64,4 +64,25 @@ suite =
                         |> List.map (.registration >> Plane.fromRegistration)
                         |> Expect.equal (List.map Just Plane.all)
             ]
+        , describe "Plane.clampToTank"
+            [ test "caps a quantity larger than the tank" <|
+                \_ ->
+                    Plane.clampToTank Plane.default (Plane.default.tankCapacity + 100)
+                        |> Expect.equal Plane.default.tankCapacity
+            , test "leaves a quantity the tank can hold alone" <|
+                \_ ->
+                    Plane.clampToTank Plane.default 10
+                        |> Expect.equal 10
+            , test "refuses a negative quantity" <|
+                \_ ->
+                    Plane.clampToTank Plane.default -10
+                        |> Expect.equal 0
+            , fuzz2 (Fuzz.oneOfValues Plane.all) (Fuzz.intRange -1000 1000) "always lands within the tank" <|
+                \plane quantity ->
+                    Plane.clampToTank plane quantity
+                        |> Expect.all
+                            [ Expect.atLeast 0
+                            , Expect.atMost plane.tankCapacity
+                            ]
+            ]
         ]

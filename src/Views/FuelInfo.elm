@@ -30,22 +30,33 @@ view { fuelFlow, flightTime, initialFuel } =
                 initialFuel
     in
     Html.div []
-        [ case usedFuel of
-            Nothing ->
-                Html.text ""
-
-            Just used ->
-                Html.h4 []
-                    [ Html.text (String.fromInt (ceiling used))
-                    , Html.text " litres consommés"
-                    ]
-        , case remainingFuel of
-            Nothing ->
-                Html.text ""
-
-            Just remaining ->
-                Html.h3 []
-                    [ Html.span [] [ Html.text (String.fromInt (floor remaining)) ]
-                    , Html.text " litres restants"
-                    ]
+        [ usedFuel
+            |> Maybe.map usedView
+            |> Maybe.withDefault (Html.text "")
+        , remainingFuel
+            |> Maybe.map remainingView
+            |> Maybe.withDefault (Html.text "")
         ]
+
+
+usedView : Float -> Html Msg
+usedView used =
+    Html.h4 []
+        [ Html.text (String.fromInt (ceiling used))
+        , Html.text " litres consommés"
+        ]
+
+
+remainingView : Float -> Html Msg
+remainingView remaining =
+    if remaining < 0 then
+        Html.h3 []
+            [ Html.span [] [ Html.text "Autonomie insuffisante" ]
+            , Html.text (" — il manque " ++ String.fromInt (ceiling (abs remaining)) ++ " litres")
+            ]
+
+    else
+        Html.h3 []
+            [ Html.span [] [ Html.text (String.fromInt (floor remaining)) ]
+            , Html.text " litres restants"
+            ]

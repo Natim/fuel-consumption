@@ -50,7 +50,13 @@ update msg model =
             ( { model | flightTime = String.toInt value }, Cmd.none )
 
         UpdateInitialFuel value ->
-            ( { model | initialFuel = String.toInt value }, Cmd.none )
+            ( { model
+                | initialFuel =
+                    String.toInt value
+                        |> Maybe.map (Plane.clampToTank model.selectedPlane)
+              }
+            , Cmd.none
+            )
 
         UpdateFuelFlow value ->
             ( { model | fuelFlow = String.toInt value }, Cmd.none )
@@ -63,7 +69,7 @@ update msg model =
                         , initialFuel =
                             model.initialFuel
                                 |> Maybe.withDefault plane.tankCapacity
-                                |> min plane.tankCapacity
+                                |> Plane.clampToTank plane
                                 |> Just
                         , selectedPlane = plane
                       }

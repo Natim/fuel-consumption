@@ -13,7 +13,7 @@ numberField label current toMsg =
             [ Html.span [] [ Html.text label ]
             , Html.input
                 [ type_ "number"
-                , value (String.fromInt (Maybe.withDefault 0 current))
+                , value (current |> Maybe.map String.fromInt |> Maybe.withDefault "")
                 , onInput toMsg
                 ]
                 []

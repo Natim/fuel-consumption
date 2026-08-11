@@ -1,4 +1,4 @@
-module Plane exposing (Plane, all, default, fromRegistration)
+module Plane exposing (Plane, all, clampToTank, default, fromRegistration)
 
 {-| The club fleet.
 
@@ -37,3 +37,11 @@ fromRegistration registration =
     all
         |> List.filter (\plane -> plane.registration == registration)
         |> List.head
+
+
+{-| A tank never holds more than its capacity, however the quantity was
+obtained.
+-}
+clampToTank : Plane -> Int -> Int
+clampToTank plane quantity =
+    clamp 0 plane.tankCapacity quantity
