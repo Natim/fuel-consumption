@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         # Fetch the latest commit, only
         fetch-depth: 1
 
     - name: Install a recent version of Python3
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: '3.12'
 
@@ -28,20 +28,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         # Fetch the latest commit, only
         fetch-depth: 1
 
     - name: Install Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: '20'
 
     # Keyed on elm.json so the downloaded packages are reused until a
     # dependency changes. There is no package-lock.json to key npm on.
     - name: Cache Elm packages
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.elm
         key: elm-${{ hashFiles('elm.json') }}
@@ -56,18 +56,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         # Fetch the latest commit, only
         fetch-depth: 1
 
     - name: Install Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: '20'
 
     - name: Cache Elm packages
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.elm
         key: elm-${{ hashFiles('elm.json') }}
