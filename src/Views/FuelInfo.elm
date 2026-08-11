@@ -1,5 +1,6 @@
 module Views.FuelInfo exposing (view)
 
+import Fuel
 import Html exposing (Html)
 import Msg exposing (Msg)
 
@@ -15,15 +16,18 @@ view { fuelFlow, flightTime, initialFuel } =
     let
         usedFuel =
             Maybe.map2
-                (\time flow -> toFloat time / 60 * toFloat flow)
+                (\time flow -> Fuel.used { flightTime = time, fuelFlow = flow })
                 flightTime
                 fuelFlow
 
         remainingFuel =
-            Maybe.map2
-                (\fuel used -> toFloat fuel - used)
+            Maybe.map3
+                (\time flow fuel ->
+                    Fuel.remaining { flightTime = time, fuelFlow = flow, initialFuel = fuel }
+                )
+                flightTime
+                fuelFlow
                 initialFuel
-                usedFuel
     in
     Html.div []
         [ case usedFuel of
